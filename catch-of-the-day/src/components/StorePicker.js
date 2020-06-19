@@ -18,7 +18,7 @@ class StorePicker extends React.Component {
       const storeName = this.myInput.current.value;
       this.props.history.push(`/store/${storeName}`)
     }
-  */ 
+  */
 
   // React Reference to input
   myInput = React.createRef();
@@ -27,7 +27,7 @@ class StorePicker extends React.Component {
   goToStore is property on component, using arrow function binds this to method/function, so now this is StorePicker component
   You have to be using Babel and the 'babel-plugin-transform-class-properties' to use the latest ES7/tc39 features
   */
-  goToStore = event => {
+  goToStore = (event) => {
     // 1. stop form from submitting
     event.preventDefault();
     /* 2. get text from the input. This uses the React ref (myInput) that we created. 
@@ -36,8 +36,8 @@ class StorePicker extends React.Component {
     /* 3. change page to store/[store-name-from-input]. 
     Uses the props history object on the Router component to access the push function, 
     which the triggers the Router to check the route again through the switch function and dynamically renders the new component */
-    this.props.history.push(`/store/${storeName}`)
-  }
+    this.props.history.push(`/store/${storeName}`);
+  };
 
   render() {
     return (
@@ -58,7 +58,6 @@ class StorePicker extends React.Component {
       </form>
     );
   }
-
 }
 
 export default StorePicker;

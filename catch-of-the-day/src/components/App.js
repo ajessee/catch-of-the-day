@@ -5,6 +5,7 @@ import Inventory from "./Inventory";
 import Order from "./Order";
 import sampleFishes from "../sample-fishes";
 import Fish from "./Fish";
+import base from "../base";
 
 // Main App component
 class App extends React.Component {
@@ -24,6 +25,29 @@ class App extends React.Component {
     order: {},
   };
 
+  // React lifecycle methods
+  componentDidMount() {
+    // get params, destructuring from the match object on props, which comes from Router component
+    const { params } = this.props.match;
+    /* 
+    firebase syncing
+    this.ref here is firebase reference to piece of data in the firebase database
+    we sync the component state from the firebase database. the syncState method grabs the stored data in the DB for the specific store that we are in using storeId,
+    and grabs stored fish data.
+    we pass it a config object that passes the context of this component object, and the component state we want to sync
+    */
+    this.ref = base.syncState(`${params.storeId}/fishes`, {
+      context: this,
+      state: "fishes",
+    });
+  }
+
+  componentWillUnmount() {
+    // on component unmount, use firebase removeBinding method to remove connection to the database to prevent memory leaks
+    base.removeBinding(this.ref);
+  }
+
+  // custom methods
   addFish = (fish) => {
     // Get copy of existing fishes state object - you never want to directly 'mutate' the existing state object for performance reasons
     // Use the JS spread operator to make a copy of current fishes object in state object
@@ -66,7 +90,7 @@ class App extends React.Component {
             and details, which will be the value of the key/value pair which is the fish object {fishKey: {fishObj with properties}}
             */}
             {Object.keys(this.state.fishes).map((key) => (
-                // You have to pass the key again as an index, because the key is a react prop and not available for public use
+              // You have to pass the key again as an index, because the key is a react prop and not available for public use
               <Fish
                 key={key}
                 index={key}
@@ -77,7 +101,7 @@ class App extends React.Component {
           </ul>
         </div>
         {/* You can pass down all of the object in the state using <Order {...this.state} />, but you should only pass down the state you explicity need */}
-        <Order fishes={this.state.fishes} order={this.state.order}/>
+        <Order fishes={this.state.fishes} order={this.state.order} />
         {/* Passing addFish setter method for state and loadSampleFishes method down to Inventory component using props */}
         <Inventory
           addFish={this.addFish}
