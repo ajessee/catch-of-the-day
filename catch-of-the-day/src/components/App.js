@@ -72,7 +72,7 @@ class App extends React.Component {
     this.setState({ fishes });
   };
 
-  // for bi-directional state editing. up from EditFishForm -> Inventory -> App. 
+  // for bi-directional state editing. up from EditFishForm -> Inventory -> App.
   // We pass this method down through props the other direction: App -> Inventory -> EditFishForm
   updateFish = (key, updatedFish) => {
     // Make copy of current state using spread operator
@@ -80,6 +80,16 @@ class App extends React.Component {
     // update the state for the fish obj passed into the updateFish method
     fishes[key] = updatedFish;
     // set the updated fishes object back into state
+    this.setState({ fishes });
+  };
+
+  // delete fish
+  deleteFish = (key) => {
+    // make copy of state using spread operator
+    const fishes = { ...this.state.fishes };
+    // update the state (normally you would use 'delete fishes[key]' to remove a property from the obj, but you have to set it to null to delete it from firebase)
+    fishes[key] = null;
+    // update the state
     this.setState({ fishes });
   };
 
@@ -100,6 +110,15 @@ class App extends React.Component {
     // 3. Call setState to update our state object
     this.setState({ order });
   };
+
+  removeFromOrder = (key) => {
+      // Make copy of state using spread operator
+      const order = { ...this.state.order };
+      // Remove order from state. In this case because we are storing the order in localStorage and not Firebase, we can use the delete keyword
+      delete order[key];
+      // 3. Call setState to update our state object
+      this.setState({ order });
+  }
 
   render() {
     return (
@@ -124,11 +143,16 @@ class App extends React.Component {
           </ul>
         </div>
         {/* You can pass down all of the object in the state using <Order {...this.state} />, but you should only pass down the state you explicity need */}
-        <Order fishes={this.state.fishes} order={this.state.order} />
-        {/* Passing addFish and updateFish setter methods for state and loadSampleFishes method down to Inventory component using props */}
+        <Order fishes={this.state.fishes} order={this.state.order} removeFromOrder={this.removeFromOrder} />
+        {/* 
+        Passing addFish(C), loadSampleFishes(R), updateFish(U), deleteFish(D), methods for updating state down to Inventory component using props
+        updateFish and deleteFish are from the bottom-up, and addFish and loadSampleFishes are from the top down for bi-directional data flow
+        passing the fishes state object down allows us to populate the EditFishForm 
+        */}
         <Inventory
           addFish={this.addFish}
           updateFish={this.updateFish}
+          deleteFish={this.deleteFish}
           loadSampleFishes={this.loadSampleFishes}
           fishes={this.state.fishes}
         />
