@@ -29,6 +29,11 @@ class App extends React.Component {
   componentDidMount() {
     // get params, destructuring from the match object on props, which comes from Router component
     const { params } = this.props.match;
+    // load order state from localStorage if it exists for the selected store
+    const localStorageRef = localStorage.getItem(params.storeId);
+    if (localStorageRef) {
+      this.setState({ order: JSON.parse(localStorageRef) });
+    }
     /* 
     firebase syncing
     this.ref here is firebase reference to piece of data in the firebase database
@@ -40,6 +45,13 @@ class App extends React.Component {
       context: this,
       state: "fishes",
     });
+  }
+
+  componentDidUpdate() {
+    // store order state in localStorage when component updates (any changes to component)
+    const { storeId } = this.props.match.params;
+    const orderString = JSON.stringify(this.state.order);
+    localStorage.setItem(storeId, orderString);
   }
 
   componentWillUnmount() {
@@ -57,6 +69,17 @@ class App extends React.Component {
     // Replace existing state with updated copy with new fish object. In ES6, if your property and value are the same, you can just pass in one thing
     // this.setState({fishes: fishes})
     // setState is a React API to set state - can update a single piece of state like we are doing here, so the setState method is a little misnamed
+    this.setState({ fishes });
+  };
+
+  // for bi-directional state editing. up from EditFishForm -> Inventory -> App. 
+  // We pass this method down through props the other direction: App -> Inventory -> EditFishForm
+  updateFish = (key, updatedFish) => {
+    // Make copy of current state using spread operator
+    const fishes = { ...this.state.fishes };
+    // update the state for the fish obj passed into the updateFish method
+    fishes[key] = updatedFish;
+    // set the updated fishes object back into state
     this.setState({ fishes });
   };
 
@@ -102,10 +125,12 @@ class App extends React.Component {
         </div>
         {/* You can pass down all of the object in the state using <Order {...this.state} />, but you should only pass down the state you explicity need */}
         <Order fishes={this.state.fishes} order={this.state.order} />
-        {/* Passing addFish setter method for state and loadSampleFishes method down to Inventory component using props */}
+        {/* Passing addFish and updateFish setter methods for state and loadSampleFishes method down to Inventory component using props */}
         <Inventory
           addFish={this.addFish}
+          updateFish={this.updateFish}
           loadSampleFishes={this.loadSampleFishes}
+          fishes={this.state.fishes}
         />
       </div>
     );
