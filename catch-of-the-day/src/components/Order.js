@@ -1,9 +1,15 @@
 // ./components/Order.js
 import React from "react";
+import PropTypes from 'prop-types';
 import { formatPrice, getTransitionOptions } from "../helpers";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 class Order extends React.Component {
+  static propTypes = {
+    fishes: PropTypes.object, 
+    order: PropTypes.object,
+    removeFromOrder: PropTypes.func
+  };
   // render function - returns HTML to make orderIds.map function below cleaner
   renderOrder = (key) => {
     const fish = this.props.fishes[key];
@@ -11,7 +17,6 @@ class Order extends React.Component {
     if (!fish) return null;
     const count = this.props.order[key];
     const isAvailable = fish && fish.status === "available";
-    // returns new transitions options obj that we can then use on the CSSTransition component
     if (!isAvailable) {
       return (
         // Nested inside TransitionGroup component in render()
@@ -29,7 +34,9 @@ class Order extends React.Component {
         <li key={key}>
           <span>
             {/* You can nest TransitionGroup component, note that CSSTransition component uses different options obj */}
+            {/* <TransitionGroup component="span" className="count" > */}
             <TransitionGroup {...getTransitionOptions("count", null, "span")} >
+              {/* <CSSTransition classNames="count" key={key} timeout={{enter: 500, exit: 500}} > */}
               <CSSTransition {...getTransitionOptions("count", count)}>
                 <span>{count}</span>
               </CSSTransition>

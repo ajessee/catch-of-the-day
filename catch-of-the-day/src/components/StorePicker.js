@@ -1,11 +1,17 @@
 // ./components/StorePicker.js
 // import the React package from npm dependency - this contains the Component base class that all components inherit from
 import React from "react";
+import PropTypes from 'prop-types';
 // import method from helper.js
 import { getFunName } from "../helpers";
 
 // Example of a component - We can name it whatever we want, each component must implement a render() method
 class StorePicker extends React.Component {
+  //PropTypes. Don't need to shape object because its coming from Router and I will assume the shape is correct
+  static propTypes = {
+    history: PropTypes.object
+  };
+
   /* 
   the verbose way to bind methods to the component instance:
     constructor() {

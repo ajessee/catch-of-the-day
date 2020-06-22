@@ -33,7 +33,7 @@ export function getTransitionOptions(className, key = null, elementType = null) 
   return {
     classNames: className,
     key: key,
-    timeout: { enter: 50000, exit: 50000 },
+    timeout: { enter: 500, exit: 500 },
   };
 };
 

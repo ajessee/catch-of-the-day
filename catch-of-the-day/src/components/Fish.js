@@ -1,8 +1,25 @@
 // ./components/Fish.js
 import React from "react";
+import PropTypes from 'prop-types';
 import { formatPrice } from "../helpers";
 
 class Fish extends React.Component {
+  /*
+  This is how to define propTypes in a regular component. 
+  It is a static variable on the Component since we want it to apply to all instances of the component
+  In this case, the Fish component has two props - the details object and the addToOrder method. The method is a PropTypes.func type
+  The details prop is itself an object, but we can be more specific and define a 'shape', which is what we expect the obj to look like
+  */
+  static propTypes = {
+    details: PropTypes.shape({
+      image: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      desc: PropTypes.string.isRequired,
+      status: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired
+    }),
+    addToOrder: PropTypes.func
+  }
   /* 
     normally you would add a method on the component to handle click for the 'Add To Order' button like this:
         handleClick = () => {

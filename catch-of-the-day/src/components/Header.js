@@ -1,12 +1,13 @@
 // ./components/Header.js
 import React from "react";
+import PropTypes from "prop-types";
 
 /* 
 new stateless functional component. Declaring a Header constant and assigning it the value of an arrow function with one argument - props.
 All components are passed the props argument. You can further complicate things by destructuring the props arg into its component parts like this:
   const Header = ({tagline, age}) => {
 Also note that after the arrow is a parens, not a curly brace. This is an implicit return from an arrow function, we are returning the JSX
-*/ 
+*/
 const Header = (props) => (
   <header className="top">
     <h1>
@@ -23,6 +24,11 @@ const Header = (props) => (
     </h3>
   </header>
 );
+
+// this is how to define propTypes in a stateless functional component. We declare it outside of the component.
+Header.propTypes = {
+  tagline: PropTypes.string.isRequired,
+};
 
 /*  
 Old declaration of component - we have refactored this into a stateless functional component to simplify
@@ -45,6 +51,6 @@ Old declaration of component - we have refactored this into a stateless function
       );
     }
   }
-*/ 
+*/
 
 export default Header;

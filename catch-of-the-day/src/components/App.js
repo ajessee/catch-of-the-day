@@ -1,5 +1,6 @@
 // App.js
 import React from "react";
+import PropTypes from "prop-types";
 import Header from "./Header";
 import Inventory from "./Inventory";
 import Order from "./Order";
@@ -9,6 +10,10 @@ import base from "../base";
 
 // Main App component
 class App extends React.Component {
+  //PropTypes. Don't need to shape object because its coming from Router and I will assume the shape is correct
+  static propTypes = {
+    match: PropTypes.object,
+  };
   /* 
     Two ways to create state on a component - in the constructor, or by adding a property to the object/component
     Verbose/Constructor way:
@@ -45,19 +50,19 @@ class App extends React.Component {
       context: this,
       state: "fishes",
     });
-  }
+  };
 
   componentDidUpdate() {
     // store order state in localStorage when component updates (any changes to component)
     const { storeId } = this.props.match.params;
     const orderString = JSON.stringify(this.state.order);
     localStorage.setItem(storeId, orderString);
-  }
+  };
 
   componentWillUnmount() {
     // on component unmount, use firebase removeBinding method to remove connection to the database to prevent memory leaks
     base.removeBinding(this.ref);
-  }
+  };
 
   // custom methods
   addFish = (fish) => {
@@ -83,7 +88,6 @@ class App extends React.Component {
     this.setState({ fishes });
   };
 
-  // delete fish
   deleteFish = (key) => {
     // make copy of state using spread operator
     const fishes = { ...this.state.fishes };
@@ -112,13 +116,13 @@ class App extends React.Component {
   };
 
   removeFromOrder = (key) => {
-      // Make copy of state using spread operator
-      const order = { ...this.state.order };
-      // Remove order from state. In this case because we are storing the order in localStorage and not Firebase, we can use the delete keyword
-      delete order[key];
-      // 3. Call setState to update our state object
-      this.setState({ order });
-  }
+    // Make copy of state using spread operator
+    const order = { ...this.state.order };
+    // Remove order from state. In this case because we are storing the order in localStorage and not Firebase, we can use the delete keyword
+    delete order[key];
+    // 3. Call setState to update our state object
+    this.setState({ order });
+  };
 
   render() {
     return (
@@ -143,7 +147,11 @@ class App extends React.Component {
           </ul>
         </div>
         {/* You can pass down all of the object in the state using <Order {...this.state} />, but you should only pass down the state you explicity need */}
-        <Order fishes={this.state.fishes} order={this.state.order} removeFromOrder={this.removeFromOrder} />
+        <Order
+          fishes={this.state.fishes}
+          order={this.state.order}
+          removeFromOrder={this.removeFromOrder}
+        />
         {/* 
         Passing addFish(C), loadSampleFishes(R), updateFish(U), deleteFish(D), methods for updating state down to Inventory component using props
         updateFish and deleteFish are from the bottom-up, and addFish and loadSampleFishes are from the top down for bi-directional data flow
@@ -158,7 +166,7 @@ class App extends React.Component {
         />
       </div>
     );
-  }
+  };
 }
 
 export default App;
