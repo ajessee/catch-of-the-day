@@ -1,27 +1,21 @@
 // ./components/Order.js
 import React from "react";
-import { formatPrice } from "../helpers";
+import { formatPrice, getTransitionOptions } from "../helpers";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 class Order extends React.Component {
   // render function - returns HTML to make orderIds.map function below cleaner
   renderOrder = (key) => {
     const fish = this.props.fishes[key];
-    const count = this.props.order[key];
     // If no fish, return null which renders nothing
     if (!fish) return null;
+    const count = this.props.order[key];
     const isAvailable = fish && fish.status === "available";
-    const getTransitionOptions = (className) => {
-      const newKey = className === 'order' ? key : count;
-      return {
-        classNames: className,
-        key: newKey,
-        timeout: { enter: 500, exit: 500 }
-      }
-    }
+    // returns new transitions options obj that we can then use on the CSSTransition component
     if (!isAvailable) {
       return (
-        <CSSTransition {...getTransitionOptions('order')} >
+        // Nested inside TransitionGroup component in render()
+        <CSSTransition {...getTransitionOptions("order", key)}>
           <li key={key}>
             Sorry {fish ? fish.name : "fish"} is no longer available
           </li>
@@ -29,11 +23,14 @@ class Order extends React.Component {
       );
     }
     return (
-      <CSSTransition {...getTransitionOptions('order')} >
+      // Nested inside TransitionGroup component in render()
+      // uses destructuring operator to get all properties of returned transition obj, sets them as props on CSSTransition component
+      <CSSTransition {...getTransitionOptions("order", key)}>
         <li key={key}>
           <span>
-            <TransitionGroup component="span" className="count">
-              <CSSTransition {...getTransitionOptions('count')} >
+            {/* You can nest TransitionGroup component, note that CSSTransition component uses different options obj */}
+            <TransitionGroup {...getTransitionOptions("count", null, "span")} >
+              <CSSTransition {...getTransitionOptions("count", count)}>
                 <span>{count}</span>
               </CSSTransition>
             </TransitionGroup>
@@ -43,11 +40,11 @@ class Order extends React.Component {
               &times;
             </button>
           </span>
-          <TransitionGroup component="span" className="count">
-              <CSSTransition {...getTransitionOptions('count')} >
-                <span>{formatPrice(count * fish.price)}</span>
-              </CSSTransition>
-            </TransitionGroup>
+          <TransitionGroup {...getTransitionOptions("count", null, "span")} >
+            <CSSTransition {...getTransitionOptions("count", count)}>
+              <span>{formatPrice(count * fish.price)}</span>
+            </CSSTransition>
+          </TransitionGroup>
         </li>
       </CSSTransition>
     );
@@ -73,7 +70,8 @@ class Order extends React.Component {
     return (
       <div className="order">
         <h2>Your Order</h2>
-        <TransitionGroup component="ul" className="order">
+        {/* Top level component for CSS transition group */}
+        <TransitionGroup {...getTransitionOptions("order", null, "ul")}>
           {orderIds.map((key) => this.renderOrder(key))}
         </TransitionGroup>
         <div className="total">

@@ -21,6 +21,22 @@ export function slugify(text) {
     .replace(/-+$/, "");
 }
 
+export function getTransitionOptions(className, key = null, elementType = null) {
+  // props for TransitionGroup component
+  if (elementType) {
+    return {
+      component: elementType,
+      className: className
+    }
+  }
+  // props for CSSTransition component
+  return {
+    classNames: className,
+    key: key,
+    timeout: { enter: 50000, exit: 50000 },
+  };
+};
+
 export function getFunName() {
   const adjectives = [
     "adorable",
