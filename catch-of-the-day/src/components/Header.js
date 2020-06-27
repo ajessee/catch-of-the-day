@@ -1,6 +1,6 @@
 // ./components/Header.js
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 /* 
 new stateless functional component. Declaring a Header constant and assigning it the value of an arrow function with one argument - props.

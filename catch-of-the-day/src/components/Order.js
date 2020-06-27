@@ -1,8 +1,8 @@
 // ./components/Order.js
-import React from "react";
+import React from 'react';
 import PropTypes from 'prop-types';
-import { formatPrice, getTransitionOptions } from "../helpers";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { formatPrice, getTransitionOptions } from '../helpers';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 class Order extends React.Component {
   static propTypes = {

@@ -50,19 +50,19 @@ class App extends React.Component {
       context: this,
       state: "fishes",
     });
-  };
+  }
 
   componentDidUpdate() {
     // store order state in localStorage when component updates (any changes to component)
     const { storeId } = this.props.match.params;
     const orderString = JSON.stringify(this.state.order);
     localStorage.setItem(storeId, orderString);
-  };
+  }
 
   componentWillUnmount() {
     // on component unmount, use firebase removeBinding method to remove connection to the database to prevent memory leaks
     base.removeBinding(this.ref);
-  };
+  }
 
   // custom methods
   addFish = (fish) => {
@@ -155,7 +155,8 @@ class App extends React.Component {
         {/* 
         Passing addFish(C), loadSampleFishes(R), updateFish(U), deleteFish(D), methods for updating state down to Inventory component using props
         updateFish and deleteFish are from the bottom-up, and addFish and loadSampleFishes are from the top down for bi-directional data flow
-        passing the fishes state object down allows us to populate the EditFishForm 
+        Passing the fishes state object down allows us to populate the EditFishForm 
+        Passing the storeId from React Router (params) lets us use that ID to assign a store for a new user and load the user's store when they log back in
         */}
         <Inventory
           addFish={this.addFish}
@@ -163,10 +164,11 @@ class App extends React.Component {
           deleteFish={this.deleteFish}
           loadSampleFishes={this.loadSampleFishes}
           fishes={this.state.fishes}
+          storeId={this.props.match.params.storeId}
         />
       </div>
     );
-  };
+  }
 }
 
 export default App;

@@ -1,12 +1,12 @@
 // Router.js
 // import React
-import React from "react";
+import React from 'react';
 // import React Router DOM
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 // import referenced components
-import StorePicker from "./StorePicker";
-import App from "./App";
-import NotFound from "./NotFound";
+import StorePicker from './StorePicker';
+import App from './App';
+import NotFound from './NotFound';
 
 const Router = () => (
   <BrowserRouter>
